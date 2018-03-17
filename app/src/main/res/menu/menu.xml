@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/web"
+        android:title="WEB"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/maps"
+        android:title="MAPS"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/dialer"
+        android:title="DIALER"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/email"
+        android:title="EMAIL"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/save"
+        android:title="SAVE"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/exit"
+        android:title="EXIT"
+        app:showAsAction="never" />
+</menu>
