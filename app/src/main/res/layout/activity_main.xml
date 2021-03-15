@@ -4,14 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.course.example.staticmenu.MainActivity">
 
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#ffff0000"
-        android:textSize="26dp"
-        android:gravity="center"
-        android:text="Click Menu Button" />
+        android:layout_margin="25dp"
+        android:layout_marginTop="100dp"
+        android:padding="5dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Todo"
+            android:textColor="@color/secondaryblue_500"
+            android:textSize="20dp"
+            android:gravity="center"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="New Todo"/>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

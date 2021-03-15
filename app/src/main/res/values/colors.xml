@@ -10,4 +10,5 @@
     <color name="secondaryblue_500">#03a2ec</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#E6E6E6</color>
 </resources>
