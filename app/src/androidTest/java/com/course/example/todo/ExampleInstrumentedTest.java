@@ -1,4 +1,4 @@
-package com.course.example.staticmenu;
+package com.course.example.todo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

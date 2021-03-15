@@ -1,25 +1,39 @@
-package com.course.example.staticmenu;
+package com.course.example.todo;
 
 import android.support.v7.app.ActionBar;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+public class TodoList extends AppCompatActivity {
+
+    public ArrayList<Todo> arrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.todo_list);
+        ListView todoList = findViewById(R.id.list);
 
-        //hide title and icon in action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
 
+        arrayList = new ArrayList<Todo>();
+        arrayList.add(new Todo("Example todo"));
+
+        CustomAdapter todoAdapter = new CustomAdapter(this, arrayList);
+        todoList.setAdapter(todoAdapter);
     }
 
     @Override

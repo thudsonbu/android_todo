@@ -1,4 +1,4 @@
-package com.course.example.staticmenu;
+package com.course.example.todo;
 
 import org.junit.Test;
 
