@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- colors from my app: https://color-manager.web.app/ -->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="successgreen_500">#83bb43</color>
+    <color name="dangerred_500">#eb3d30</color>
+    <color name="warningyellow_500">#f6e336</color>
+    <color name="auroragreen_500">#70d888</color>
+    <color name="paradisegreen_500">#b0e18d</color>
+    <color name="primaryblue_500">#1e8feb</color>
+    <color name="secondaryblue_500">#03a2ec</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>

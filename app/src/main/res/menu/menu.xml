@@ -3,28 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/web"
-        android:title="WEB"
+        android:id="@+id/add"
+        android:title="Add"
         app:showAsAction="always" />
     <item
-        android:id="@+id/maps"
-        android:title="MAPS"
+        android:id="@+id/delete"
+        android:title="Delete"
         app:showAsAction="always" />
     <item
-        android:id="@+id/dialer"
-        android:title="DIALER"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/email"
-        android:title="EMAIL"
+        android:id="@+id/update"
+        android:title="Update"
         app:showAsAction="always" />
     <item
         android:id="@+id/save"
-        android:title="SAVE"
+        android:title="Save"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/close"
+        android:title="Close"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/exit"
-        android:title="EXIT"
-        app:showAsAction="never" />
 </menu>
