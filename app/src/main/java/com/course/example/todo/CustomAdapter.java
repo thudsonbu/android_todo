@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.List;
 
 class CustomAdapter extends ArrayAdapter {
     ArrayList<Todo> arrayList;
@@ -17,17 +18,30 @@ class CustomAdapter extends ArrayAdapter {
         this.context = context;
     }
 
+    @Override
+    public int getCount() {
+        return arrayList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return arrayList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
     //return view displaying data at position
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Todo todo = arrayList.get(position);
-        if( convertView == null ){
-            LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.list_row, null);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        convertView = layoutInflater.inflate(R.layout.list_row, null);
 
-            TextView text = convertView.findViewById(R.id.text);
-            text.setText(todo.getText());
-        }
+        TextView text = convertView.findViewById(R.id.text);
+        text.setText(todo.getText());
+
         return convertView;
     }
 }

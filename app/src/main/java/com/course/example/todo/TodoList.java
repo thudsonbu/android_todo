@@ -5,11 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.lang.reflect.Array;
@@ -17,22 +14,23 @@ import java.util.ArrayList;
 
 public class TodoList extends AppCompatActivity {
 
-    public ArrayList<Todo> arrayList;
+    public ArrayList<Todo> todoArray = new ArrayList();
+    public CustomAdapter todoAdapter;
+    public EditText todoInput;
+    public ListView todoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todo_list);
-        ListView todoList = findViewById(R.id.list);
+        todoList = findViewById(R.id.list);
+        todoInput = findViewById(R.id.todo_input);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
 
-        arrayList = new ArrayList<Todo>();
-        arrayList.add(new Todo("Example todo"));
-
-        CustomAdapter todoAdapter = new CustomAdapter(this, arrayList);
+        todoAdapter = new CustomAdapter(this, todoArray);
         todoList.setAdapter(todoAdapter);
     }
 
@@ -47,6 +45,8 @@ public class TodoList extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.add:
+                todoArray.add(new Todo(todoInput.getText().toString()));
+                todoAdapter.notifyDataSetChanged();
                 return true;
 
             case R.id.update:
@@ -62,7 +62,7 @@ public class TodoList extends AppCompatActivity {
                 return true;
 
             default:
-                return super.onOptionsItemSelected(item);
+                return true;
         }
     }
 }
