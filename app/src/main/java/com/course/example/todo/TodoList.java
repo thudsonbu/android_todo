@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TodoList extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -47,6 +46,8 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
     // list item handler
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         String todo = todoArray.get(position).getText();
+        // the simplest way to do this is to remove it from the list while editing then add it
+        // back if they press update
         todoInput.setText(todo);
         todoArray.remove(position);
         todoAdapter.notifyDataSetChanged();
@@ -59,22 +60,28 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.add:
-                todoArray.add(new Todo(todoInput.getText().toString()));
-                todoAdapter.notifyDataSetChanged();
-                todoInput.getText().clear();
-                Toast.makeText(this, "Added Todo", Toast.LENGTH_SHORT).show();
-                return true;
+                if ( todoInput.getText().toString().length() > 0 ) {
+                    todoArray.add(new Todo(todoInput.getText().toString()));
+                    todoAdapter.notifyDataSetChanged();
+                    todoInput.getText().clear();
+                    Toast.makeText(this, "Added Todo", Toast.LENGTH_SHORT).show();
+                }
+               return true;
 
             case R.id.update:
-                todoArray.add(new Todo(todoInput.getText().toString()));
-                todoAdapter.notifyDataSetChanged();
-                todoInput.getText().clear();
-                Toast.makeText(this, "Updated Todo", Toast.LENGTH_SHORT).show();
+                if ( todoInput.getText().toString().length() > 0 ) {
+                    todoArray.add(new Todo(todoInput.getText().toString()));
+                    todoAdapter.notifyDataSetChanged();
+                    todoInput.getText().clear();
+                    Toast.makeText(this, "Updated Todo", Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.delete:
-                todoInput.getText().clear();
-                Toast.makeText(this, "Deleted Todo", Toast.LENGTH_SHORT).show();
+                if ( todoInput.getText().toString().length() > 0 ) {
+                    todoInput.getText().clear();
+                    Toast.makeText(this, "Deleted Todo", Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.save:

@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="com.course.example.todo.TodoList">
 
+    <!-- page layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +18,8 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <!-- layout to put clock and add todo next to each other -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +37,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textSize="30dp"
-                app:showAsAction="always" />
+                app:showAsAction="always"
+                android:textColor="@color/darkgrey"/>
 
         </LinearLayout>
 
@@ -45,7 +49,6 @@
             android:textSize="25dp"
             android:layout_marginTop="15dp"
             android:hint="New Todo"/>
-
 
         <TextView
             android:layout_width="match_parent"

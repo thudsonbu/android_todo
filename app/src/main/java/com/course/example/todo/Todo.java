@@ -11,8 +11,4 @@ public class Todo {
         return this.text;
     }
 
-    public String setText(String text){
-        this.text = text;
-        return text;
-    }
 }
