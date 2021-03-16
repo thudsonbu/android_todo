@@ -5,14 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class TodoList extends AppCompatActivity {
+public class TodoList extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     public ArrayList<Todo> todoArray = new ArrayList();
     public CustomAdapter todoAdapter;
@@ -25,6 +27,8 @@ public class TodoList extends AppCompatActivity {
         setContentView(R.layout.todo_list);
         todoList = findViewById(R.id.list);
         todoInput = findViewById(R.id.todo_input);
+
+        todoList.setOnItemClickListener(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -40,6 +44,16 @@ public class TodoList extends AppCompatActivity {
         return true;
     }
 
+    // list item handler
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        String todo = todoArray.get(position).getText();
+        todoInput.setText(todo);
+        todoArray.remove(position);
+        todoAdapter.notifyDataSetChanged();
+    }
+
+
+    // menu handler
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -47,18 +61,28 @@ public class TodoList extends AppCompatActivity {
             case R.id.add:
                 todoArray.add(new Todo(todoInput.getText().toString()));
                 todoAdapter.notifyDataSetChanged();
+                todoInput.getText().clear();
+                Toast.makeText(this, "Added Todo", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.update:
+                todoArray.add(new Todo(todoInput.getText().toString()));
+                todoAdapter.notifyDataSetChanged();
+                todoInput.getText().clear();
+                Toast.makeText(this, "Updated Todo", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.delete:
+                todoInput.getText().clear();
+                Toast.makeText(this, "Deleted Todo", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.save:
+                Toast.makeText(this, "List Saved Successfully", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.close:
+                this.finish();
                 return true;
 
             default:

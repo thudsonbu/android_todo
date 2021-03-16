@@ -17,19 +17,33 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Todo"
-            android:textColor="@color/secondaryblue_500"
-            android:textSize="30dp"
-            android:gravity="center"/>
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="Add Todo"
+                android:textColor="@color/secondaryblue_500"
+                android:textSize="30dp" />
+
+            <DigitalClock
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                app:showAsAction="always" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/todo_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="25dp"
+            android:layout_marginTop="15dp"
             android:hint="New Todo"/>
 
 
@@ -40,8 +54,7 @@
             android:textColor="@color/secondaryblue_500"
             android:textSize="30dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="15dp"
-            android:gravity="center"/>
+            android:layout_marginBottom="15dp" />
 
         <ListView
             android:id="@+id/list"
