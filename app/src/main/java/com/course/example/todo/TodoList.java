@@ -12,8 +12,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -23,9 +26,7 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
     public CustomAdapter todoAdapter;
     public EditText todoInput;
     public ListView todoList;
-    public OutputStreamWriter out;
     public String fileName = "list.txt";
-    public File saveFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,25 +39,22 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayUseLogoEnabled(false);
 
         todoAdapter = new CustomAdapter(this, todoArray);
-        todoList.setAdapter(todoAdapter);
-
-//        try {
-//            File ref = new File(fileName);
-//            if ( ref.exists() ) {
-//                readTodos();
-//            }
-//        } catch (Exception e){
-//            Log.e( "TodoList", e.getMessage() );
-//        }
+        todoList.setAdapter(todoAdapter);actionBar.setDisplayUseLogoEnabled(false);
 
         try {
-            out = new OutputStreamWriter(openFileOutput(fileName, MODE_PRIVATE));
-        } catch (IOException e) {
+            Log.e("TodoList", "Start read");
+            File ref = new File(fileName);
+            if ( ref.exists() ) {
+                Log.e("TodoList", "Reading");
+                readTodos();
+                todoAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception e){
             Log.e( "TodoList", e.getMessage() );
         }
+
     }
 
     @Override
@@ -77,7 +75,11 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
 
     // save list to 'list.txt' file
     public void saveTodos(){
+        OutputStreamWriter out;
         String todos = "";
+        InputStream inStream;
+        InputStreamReader inStreamReader;
+        BufferedReader bufferedReader;
 
         if ( todoArray.size() == 0 ) {
             Toast.makeText(this, "No Todo's to Save",
@@ -87,23 +89,58 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
         }
 
         try {
-            // delete old todos file
-//            if ( saveFile.exists() ) {
-//                saveFile.delete();
-//            }
-            
+            File ref = new File(fileName);
+            if ( ref.exists() ) {
+                String path = ref.getPath();
+                Log.e("TodoList", path);
+                ref.delete();
+            }
+
             // create todo string
             for ( Todo todo : todoArray ) {
-                todos += todo.getText().toString() + " \n";
+                todos += todo.getText() + " \n";
+                Log.e("TodoListItem", todo.getText() );
             }
+
+            Log.e( "TodoListAll", todos );
+
+            out = new OutputStreamWriter(openFileOutput(fileName, MODE_PRIVATE));
 
             out.write(todos);
 
             out.close();
 
             Toast.makeText(this, "List Saved Successfully", Toast.LENGTH_SHORT).show();
+
         } catch (IOException e) {
+
             Toast.makeText(this, "Save Failed", Toast.LENGTH_SHORT).show();
+            Log.e( "TodoList", e.getMessage() );
+        }
+    }
+
+    // read todos from 'list.txt' file
+    public void readTodos() {
+        InputStream inStream;
+        InputStreamReader inStreamReader;
+        BufferedReader bufferedReader;
+
+        try {
+            inStream = openFileInput(fileName);
+            inStreamReader = new InputStreamReader(inStream);
+            bufferedReader = new BufferedReader(inStreamReader);
+            String todo;
+
+            while((todo = bufferedReader.readLine()) != null){
+                todoArray.add(new Todo(todo));
+                Log.e("TodoList", todo );
+            }
+
+            bufferedReader.close();
+
+        } catch (IOException e) {
+
+            Log.e( "TodoList", e.getMessage() );
         }
     }
 
