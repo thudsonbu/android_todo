@@ -1,5 +1,6 @@
 package com.course.example.todo;
 
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -19,14 +22,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class TodoList extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class TodoList extends AppCompatActivity implements AdapterView.OnItemClickListener, TextToSpeech.OnInitListener {
 
     public ArrayList<Todo> todoArray = new ArrayList();
     public CustomAdapter todoAdapter;
     public EditText todoInput;
     public ListView todoList;
     public String fileName = "list.txt";
+    public String path;
+    public TextToSpeech speaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +47,49 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
         actionBar.setDisplayShowTitleEnabled(true);
 
         todoAdapter = new CustomAdapter(this, todoArray);
-        todoList.setAdapter(todoAdapter);actionBar.setDisplayUseLogoEnabled(false);
+        todoList.setAdapter(todoAdapter);
+        actionBar.setDisplayUseLogoEnabled(false);
 
+        path = getFilesDir().toString();
         try {
-            Log.e("TodoList", "Start read");
-            File ref = new File(fileName);
-            if ( ref.exists() ) {
-                Log.e("TodoList", "Reading");
+            if (new File(path + "/" + fileName).exists()) {
                 readTodos();
                 todoAdapter.notifyDataSetChanged();
             }
         } catch (Exception e){
-            Log.e( "TodoList", e.getMessage() );
+            Log.e("TodoList", e.getMessage());
         }
 
+        speaker = new TextToSpeech(this, this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = speaker.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TodoList", "Invalid language");
+            }
+        } else {
+            Log.e("TodoList", "Failed to initialize text to speech");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (speaker != null) {
+            speaker.stop();
+            speaker.shutdown();
+        }
+        super.onDestroy();
     }
 
     // list item handler
@@ -77,45 +106,31 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
     public void saveTodos(){
         OutputStreamWriter out;
         String todos = "";
-        InputStream inStream;
-        InputStreamReader inStreamReader;
-        BufferedReader bufferedReader;
-
-        if ( todoArray.size() == 0 ) {
-            Toast.makeText(this, "No Todo's to Save",
-                    Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
 
         try {
-            File ref = new File(fileName);
-            if ( ref.exists() ) {
-                String path = ref.getPath();
-                Log.e("TodoList", path);
+            if ( new File(path + "/" + fileName).exists()) {
+                File ref = new File(path + "/" + fileName);
                 ref.delete();
             }
 
             // create todo string
-            for ( Todo todo : todoArray ) {
+            for (Todo todo : todoArray) {
                 todos += todo.getText() + " \n";
-                Log.e("TodoListItem", todo.getText() );
             }
 
-            Log.e( "TodoListAll", todos );
-
-            out = new OutputStreamWriter(openFileOutput(fileName, MODE_PRIVATE));
+            out = new OutputStreamWriter(openFileOutput(fileName , MODE_PRIVATE));
 
             out.write(todos);
 
             out.close();
 
             Toast.makeText(this, "List Saved Successfully", Toast.LENGTH_SHORT).show();
+            Log.e("TodoList", "Saved List");
 
         } catch (IOException e) {
 
             Toast.makeText(this, "Save Failed", Toast.LENGTH_SHORT).show();
-            Log.e( "TodoList", e.getMessage() );
+            Log.e("TodoList", e.getMessage());
         }
     }
 
@@ -131,17 +146,21 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
             bufferedReader = new BufferedReader(inStreamReader);
             String todo;
 
-            while((todo = bufferedReader.readLine()) != null){
+            while((todo = bufferedReader.readLine()) != null) {
                 todoArray.add(new Todo(todo));
-                Log.e("TodoList", todo );
             }
 
             bufferedReader.close();
 
         } catch (IOException e) {
 
-            Log.e( "TodoList", e.getMessage() );
+            Log.e("TodoList", e.getMessage());
         }
+    }
+
+    // text to speech
+    public void speak(String output) {
+        speaker.speak(output, TextToSpeech.QUEUE_FLUSH, null, "id 0");
     }
 
 
@@ -151,27 +170,33 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.add:
-                if ( todoInput.getText().toString().length() > 0 ) {
-                    todoArray.add(new Todo(todoInput.getText().toString()));
+                if (todoInput.getText().toString().length() > 0) {
+                    String todo = todoInput.getText().toString();
+                    todoArray.add(new Todo(todo));
                     todoAdapter.notifyDataSetChanged();
                     todoInput.getText().clear();
                     Toast.makeText(this, "Added Todo", Toast.LENGTH_SHORT).show();
+                    speak("Adding " + todo);
                 }
                return true;
 
             case R.id.update:
-                if ( todoInput.getText().toString().length() > 0 ) {
-                    todoArray.add(new Todo(todoInput.getText().toString()));
+                if ( todoInput.getText().toString().length() > 0) {
+                    String todo = todoInput.getText().toString();
+                    todoArray.add(new Todo(todo));
                     todoAdapter.notifyDataSetChanged();
                     todoInput.getText().clear();
                     Toast.makeText(this, "Updated Todo", Toast.LENGTH_SHORT).show();
+                    speak("Updated " + todo);
                 }
                 return true;
 
             case R.id.delete:
-                if ( todoInput.getText().toString().length() > 0 ) {
+                if (todoInput.getText().toString().length() > 0) {
+                    String todo = todoInput.getText().toString();
                     todoInput.getText().clear();
                     Toast.makeText(this, "Deleted Todo", Toast.LENGTH_SHORT).show();
+                    speak("Deleting " + todo);
                 }
                 return true;
 
@@ -180,6 +205,7 @@ public class TodoList extends AppCompatActivity implements AdapterView.OnItemCli
                 return true;
 
             case R.id.close:
+                saveTodos();
                 this.finish();
                 return true;
 
